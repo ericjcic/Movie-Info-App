@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en" ng-app="myApp">
+<head>
+<meta charset="utf-8">
+<title>Movie Info App</title>
+<link rel="stylesheet" type="text/css" href="style.css">
+<script src= "http://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular.min.js"></script>
+</head>
+
+<body>
+	<div id="wrapper">
+    	<div id="content" ng-controller="FieldController">
+        	<div id="content-wrapper">
+                <h1>Search for movie info:</h1>
+                <form>
+                    Title:
+                    <input type="text" ng-model="movieTitle"><br>
+                    Year:
+                    <input type="text" ng-model="movieYear"><br>
+                    Plot Length:
+                    <select ng-model="moviePlot">
+                        <option value="short">Short</option>
+                        <option value="full">Full</option>
+                    </select><br>
+                    <button ng-click="clickButton()">search</button>
+                </form>
+                <div id="movie-info">
+                    <h1> {{TitleLabel}} </h1>
+                    <h2> {{Title}} </h2>
+
+                    <h3> {{PlotLabel}} </h3> 
+                    <p> {{Plot}} </p>
+                    
+                    <h3> {{GenreLabel}} </h3> 
+                    <p> {{Genre}} </p>
+                    
+                    <h3> {{ActorsLabel}} </h3>
+                    <p> {{Actors}} </p>
+                    
+                    <h3> {{RatedLabel}} </h3> 
+                    <p> {{Rated}} </p>
+                    
+                    <h3> {{AwardsLabel}} </h3> 
+                    <p> {{Awards}} </p>
+                    
+                    <h3> {{CountryLabel}} </h3>
+                    <p> {{Country}} </p>
+                     
+                    <h3> {{DirectorLabel}} </h3> 
+                    <p> {{Director}} </p>
+                    
+                    <h3> {{LanguageLabel}} </h3> 
+                    <p> {{Language}} </p>
+                    
+                    <h3> {{ReleasedLabel}} </h3> 
+                    <p> {{Released}} </p>
+                    
+                    <h3> {{RuntimeLabel}} </h3> 
+                    <p> {{Runtime}} </p>
+                    
+                    <h3> {{WriterLabel}} </h3> 
+                    <p> {{Writer}} </p>
+                    
+                    <h3> {{imdbRatingLabel}} </h3> 
+                    <p> {{imdbRating}} </p>
+                    
+                    <h3> {{imdbVotesLabel}} </h3> 
+                    <p> {{imdbVotes}} </p>
+                    
+                </div>
+        	</div>
+        </div>
+    </div>
+    <script>
+		var myApp = angular.module('myApp', []);
+
+		var urlString;
+
+		myApp.controller('FieldController', ['$scope', '$http', function($scope, $http) {
+	
+			$scope.movieYear = "";
+			$scope.moviePlot = "short";
+	
+			$scope.clickButton = function() {
+				
+			$scope.TitleLabel = "Searching...";
+		
+			urlString = "http://www.omdbapi.com/?t=" + $scope.movieTitle.replace(/ /gi, "+") + "&y=" + $scope.movieYear + "&plot=" + $scope.moviePlot +"&r=json";
+			
+	
+			//console.log(urlString);
+			
+		    $http.get(urlString).success(function(data) {
+				
+				if (data.Response === "False")
+				{
+					$scope.TitleLabel = "Movie not found!"
+				}
+				else
+				{
+					$scope.TitleLabel = "Movie: "
+					$scope.Title = data.Title;
+					
+					$scope.PlotLabel = "Plot Summary: "
+					$scope.Plot = data.Plot;
+					
+					$scope.GenreLabel = "Genre: "
+					$scope.Genre = data.Genre;
+					
+					$scope.RatedLabel = "Rated: "
+					$scope.Rated = data.Rated;
+					
+					$scope.ActorsLabel = "Actors: "
+					$scope.Actors = data.Actors;
+					
+					$scope.AwardsLabel = "Awards: "
+					$scope.Awards = data.Awards;
+					
+					$scope.CountryLabel = "Country: "
+					$scope.Country = data.Country;
+					
+					$scope.DirectorLabel = "Director: "
+					$scope.Director = data.Director;
+					
+					$scope.LanguageLabel = "Language: "
+					$scope.Language = data.Language;
+					
+					$scope.ReleasedLabel = "Released: "
+					$scope.Released = data.Released;
+					
+					$scope.RuntimeLabel = "Runtime: "
+					$scope.Runtime = data.Runtime;
+					
+					$scope.WriterLabel = "Writer: "
+					$scope.Writer = data.Writer;
+					
+					$scope.imdbRatingLabel = "IMDB Rating: "
+					$scope.imdbRating = data.imdbRating;
+					
+					$scope.imdbVotesLabel = "IMDB Votes: "
+					$scope.imdbVotes = data.imdbVotes;
+				}
+				//console.log(urlString);
+				
+  				}).
+			  	error(function(data) {
+				$scope.TitleLabel = "Request failed! ";
+			   });
+		    }
+		}]);
+</script>
+</body>
+</html>
